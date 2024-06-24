@@ -1,0 +1,114 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+#define MAX_CITIES 100
+#define MAX_TOURS 1000
+
+// Structure to represent a city
+typedef struct City {
+    int id;
+    double x, y;
+} City;
+
+// Structure to represent a tour
+typedef struct Tour {
+    int cities[MAX_CITIES];
+    int length;
+    double distance;
+} Tour;
+
+// Function to calculate the distance between two cities
+double distanceBetweenCities(City city1, City city2) {
+    return sqrt(pow(city1.x - city2.x, 2) + pow(city1.y - city2.y, 2));
+}
+
+// Function to generate a random tour
+void generateRandomTour(Tour* tour, City cities[], int numCities) {
+    for (int i = 0; i < numCities; i++) {
+        tour->cities[i] = i;
+    }
+    for (int i = 0; i < numCities; i++) {
+        int j = rand() % numCities;
+        int temp = tour->cities[i];
+        tour->cities[i] = tour->cities[j];
+        tour->cities[j] = temp;
+    }
+    tour->length = numCities;
+    tour->distance = 0;
+    for (int i = 0; i < numCities - 1; i++) {
+        tour->distance += distanceBetweenCities(cities[tour->cities[i]], cities[tour->cities[i + 1]]);
+    }
+    tour->distance += distanceBetweenCities(cities[tour->cities[numCities - 1]], cities[tour->cities[0]]);
+}
+
+// Function to calculate the fitness of a tour
+double fitness(Tour tour, City cities[]) {
+    return 1 / tour.distance;
+}
+
+// Function to mutate a tour
+void mutateTour(Tour* tour, City cities[], int numCities) {
+    int i = rand() % numCities;
+    int j = rand() % numCities;
+    int temp = tour->cities[i];
+    tour->cities[i] = tour->cities[j];
+    tour->cities[j] = temp;
+    tour->distance = 0;
+    for (int i = 0; i < numCities - 1; i++) {
+        tour->distance += distanceBetweenCities(cities[tour->cities[i]], cities[tour->cities[i + 1]]);
+    }
+    tour->distance += distanceBetweenCities(cities[tour->cities[numCities - 1]], cities[tour->cities[0]]);
+}
+
+// Function to perform the genetic algorithm
+void geneticAlgorithm(City cities[], int numCities, int populationSize, int generations) {
+    Tour population[MAX_TOURS];
+    for (int i = 0; i < populationSize; i++) {
+        generateRandomTour(&population[i], cities, numCities);
+    }
+    for (int i = 0; i < generations; i++) {
+        // Selection
+        Tour fittestTour = population[0];
+        for (int j = 1; j < populationSize; j++) {
+            if (fitness(population[j], cities) > fitness(fittestTour, cities)) {
+                fittestTour = population[j];
+            }
+        }
+        // Crossover
+        Tour child;
+        for (int j = 0; j < numCities; j++) {
+            child.cities[j] = fittestTour.cities[j];
+        }
+        child.length = numCities;
+        child.distance = 0;
+        for (int j = 0; j < numCities - 1; j++) {
+            child.distance += distanceBetweenCities(cities[child.cities[j]], cities[child.cities[j + 1]]);
+        }
+        child.distance += distanceBetweenCities(cities[child.cities[numCities - 1]], cities[child.cities[0]]);
+        // Mutation
+        mutateTour(&child, cities, numCities);
+        // Replacement
+        population[rand() % populationSize] = child;
+    }
+    // Print the best tour
+    Tour bestTour = population[0];
+    for (int i = 1; i < populationSize; i++) {
+        if (fitness(population[i], cities) > fitness(bestTour, cities)) {
+            bestTour = population[i];
+        }
+    }
+    printf("Best tour: ");
+    for (int i = 0; i < numCities; i++) {
+        printf("%d ", bestTour.cities[i]);
+    }
+    printf("\nDistance: %f\n", bestTour.distance);
+}
+
+int main() {
+    City cities[] = {
+        {0, 10, 10},
+        {1, 20, 20},
+        {2, 30, 30},
+        {3, 40, 40},
+        {4, 50, 50
