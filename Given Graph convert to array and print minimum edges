@@ -1,0 +1,43 @@
+#include <stdio.h>
+
+#define MAX_VERTICES 10
+
+void printGraph(int graph[][MAX_VERTICES], int numVertices) {
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = 0; j < numVertices; j++) {
+            printf("%d ", graph[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int countEdges(int graph[][MAX_VERTICES], int numVertices) {
+    int count = 0;
+    for (int i = 0; i < numVertices; i++) {
+        for (int j = i + 1; j < numVertices; j++) {
+            if (graph[i][j] == 1) {
+                count++;
+            }
+        }
+    }
+    return count;
+}
+
+int main() {
+    int numVertices = 5;
+    int graph[][MAX_VERTICES] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 1, 1, 0},
+        {1, 1, 0, 1, 1},
+        {0, 1, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+
+    printf("Adjacency Matrix:\n");
+    printGraph(graph, numVertices);
+
+    int minEdges = countEdges(graph, numVertices);
+    printf("Minimum number of edges: %d\n", minEdges);
+
+    return 0;
+}
