@@ -1,0 +1,62 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_SIZE 100
+
+// Structure to represent a stack
+typedef struct {
+    int data[MAX_SIZE];
+    int top;
+} Stack;
+
+// Function to initialize a stack
+void initStack(Stack* s) {
+    s->top = -1;
+}
+
+// Function to push an element onto the stack
+void push(Stack* s, int value) {
+    if (s->top == MAX_SIZE - 1) {
+        printf("Error: Stack is full\n");
+        return;
+    }
+    s->data[++s->top] = value;
+}
+
+// Function to pop an element from the stack
+int pop(Stack* s) {
+    if (s->top == -1) {
+        printf("Error: Stack is empty\n");
+        return -1;
+    }
+    return s->data[s->top--];
+}
+
+int main() {
+    Stack stack1, stack2;
+    initStack(&stack1);
+    initStack(&stack2);
+
+    // Push elements onto the stacks
+    push(&stack1, 10);
+    push(&stack1, 20);
+    push(&stack1, 30);
+
+    push(&stack2, 40);
+    push(&stack2, 50);
+    push(&stack2, 60);
+
+    // Get the bottom-most and top-most elements
+    int bottom1 = stack1.data[0];
+    int top1 = stack1.data[stack1.top];
+    int bottom2 = stack2.data[0];
+    int top2 = stack2.data[stack2.top];
+
+    // Add the bottom-most and top-most elements
+    int result = bottom1 + top2;
+
+    // Print the result
+    printf("The sum of the bottom-most element of stack1 (%d) and the top-most element of stack2 (%d) is: %d\n", bottom1, top2, result);
+
+    return 0;
+}
