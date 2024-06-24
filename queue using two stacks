@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Stack node structure
+typedef struct StackNode {
+    int data;
+    struct StackNode* next;
+} StackNode;
+
+// Stack structure
+typedef struct Stack {
+    StackNode* top;
+} Stack;
+
+// Function to create a new stack node
+StackNode* createStackNode(int data) {
+    StackNode* newNode = (StackNode*)malloc(sizeof(StackNode));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to push an element onto the stack
+void push(Stack* s, int data) {
+    StackNode* newNode = createStackNode(data);
+    newNode->next = s->top;
+    s->top = newNode;
+}
+
+// Function to pop an element from the stack
+int pop(Stack* s) {
+    if (s->top == NULL) {
+        printf("Stack is empty\n");
+        return -1;
+    }
+
+    int data = s->top->data;
+    StackNode* temp = s->top;
+    s->top = s->top->next;
+    free(temp);
+    return data;
+}
+
+// Queue structure
+typedef struct Queue {
+    Stack s1;
+    Stack s2;
+} Queue;
+
+// Function to enqueue an element into the queue
+void enqueue(Queue* q, int data) {
+    push(&q->s1, data);
+}
+
+// Function to dequeue an element from the queue
+int dequeue(Queue* q) {
+    if (q->s1.top == NULL && q->s2.top == NULL) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+
+    if (q->s2.top == NULL) {
+        while (q->s1.top!= NULL) {
+            push(&q->s2, pop(&q->s1));
+        }
+    }
+
+    return pop(&q->s2);
+}
+
+int main() {
+    Queue q;
+    q.s1.top = q.s2.top = NULL;
+
+    enqueue(&q, 1);
+    enqueue(&q, 2);
+    enqueue(&q, 3);
+    enqueue(&q, 4);
+    enqueue(&q, 5);
+
+    printf("Dequeued element: %d\n", dequeue(&q));
+    printf("Dequeued element: %d\n", dequeue(&q));
+    printf("Dequeued element: %d\n", dequeue(&q));
+    printf("Dequeued element: %d\n", dequeue(&q));
+    printf("Dequeued element: %d\n", dequeue(&q));
+
+    return 0;
+}
