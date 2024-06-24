@@ -1,0 +1,17 @@
+#include <stdio.h>
+
+int fib(int n) {
+    if (n <= 1)
+        return n;
+    return fib(n-1) + fib(n-2);
+}
+
+int calculateSum(int n) {
+    return fib(n+2) - 1;
+}
+
+int main() {
+    int n = 4;
+    printf("Sum of Fibonacci numbers is: %d\n", calculateSum(n));
+    return 0;
+}
