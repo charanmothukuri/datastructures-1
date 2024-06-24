@@ -1,0 +1,74 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* left;
+    struct Node* right;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node into the BST
+Node* insertNode(Node* root, int data) {
+    if (root == NULL) {
+        root = createNode(data);
+    } else if (data < root->data) {
+        root->left = insertNode(root->left, data);
+    } else if (data > root->data) {
+        root->right = insertNode(root->right, data);
+    }
+    return root;
+}
+
+// Function to find the kth smallest element in the BST
+int kthSmallest(Node* root, int k, int* count) {
+    if (root == NULL) {
+        return -1;
+    }
+
+    int left = kthSmallest(root->left, k, count);
+    if (left != -1) {
+        return left;
+    }
+
+    (*count)++;
+    if (*count == k) {
+        return root->data;
+    }
+
+    return kthSmallest(root->right, k, count);
+}
+
+int main() {
+    Node* root = NULL;
+
+    // Create a sample BST: 5 -> 3 -> 1, 4 -> 7 -> 6, 8
+    root = insertNode(root, 5);
+    root = insertNode(root, 3);
+    root = insertNode(root, 1);
+    root = insertNode(root, 4);
+    root = insertNode(root, 7);
+    root = insertNode(root, 6);
+    root = insertNode(root, 8);
+
+    int k = 3;
+    int count = 0;
+    int result = kthSmallest(root, k, &count);
+
+    if (result != -1) {
+        printf("The %dth smallest element in the BST is %d\n", k, result);
+    } else {
+        printf("The BST does not have %d elements\n", k);
+    }
+
+    return 0;
+}
