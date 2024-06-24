@@ -1,0 +1,98 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a node at the end of the list
+void insertNode(Node** head, int data) {
+    Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Function to print the list
+void printList(Node* head) {
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+// Function to check if the list is a palindrome
+int isPalindrome(Node* head) {
+    Node* slow = head;
+    Node* fast = head;
+    Node* prev = NULL;
+
+    // Find the middle of the list using the slow and fast pointers
+    while (fast != NULL && fast->next != NULL) {
+        prev = slow;
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+
+    // Reverse the second half of the list
+    Node* secondHalf = slow;
+    Node* prevSecondHalf = NULL;
+    while (secondHalf != NULL) {
+        Node* temp = secondHalf->next;
+        secondHalf->next = prevSecondHalf;
+        prevSecondHalf = secondHalf;
+        secondHalf = temp;
+    }
+
+    // Compare the first half and the reversed second half
+    Node* firstHalf = head;
+    Node* secondHalfReversed = prevSecondHalf;
+    while (firstHalf != NULL && secondHalfReversed != NULL) {
+        if (firstHalf->data != secondHalfReversed->data) {
+            return 0; // Not a palindrome
+        }
+        firstHalf = firstHalf->next;
+        secondHalfReversed = secondHalfReversed->next;
+    }
+
+    return 1; // Palindrome
+}
+
+int main() {
+    Node* head = NULL;
+
+    // Create a sample list: 1 -> 2 -> 3 -> 2 -> 1
+    insertNode(&head, 1);
+    insertNode(&head, 2);
+    insertNode(&head, 3);
+    insertNode(&head, 2);
+    insertNode(&head, 1);
+
+    printf("Original list: ");
+    printList(head);
+
+    if (isPalindrome(head)) {
+        printf("The list is a palindrome.\n");
+    } else {
+        printf("The list is not a palindrome.\n");
+    }
+
+    return 0;
+}
