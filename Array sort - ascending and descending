@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+// Function to swap two elements in an array
+void swap(int* a, int* b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+// Function to sort an array in ascending order using Bubble Sort
+void bubbleSortAsc(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] > arr[j + 1]) {
+                swap(&arr[j], &arr[j + 1]);
+            }
+        }
+    }
+}
+
+// Function to sort an array in descending order using Bubble Sort
+void bubbleSortDesc(int arr[], int n) {
+    for (int i = 0; i < n - 1; i++) {
+        for (int j = 0; j < n - i - 1; j++) {
+            if (arr[j] < arr[j + 1]) {
+                swap(&arr[j], &arr[j + 1]);
+            }
+        }
+    }
+}
+
+// Function to print an array
+void printArray(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+
+int main() {
+    int arr[] = {5, 2, 8, 3, 1, 6, 4};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Original array: ");
+    printArray(arr, n);
+
+    bubbleSortAsc(arr, n);
+    printf("Sorted array in ascending order: ");
+    printArray(arr, n);
+
+    bubbleSortDesc(arr, n);
+    printf("Sorted array in descending order: ");
+    printArray(arr, n);
+
+    return 0;
+}
