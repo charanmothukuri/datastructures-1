@@ -1,0 +1,26 @@
+#include <stdio.h>
+
+void printRepeatedCharacters(char arr[], int size) {
+    for (int i = 0; i < size; i++) {
+        for (int j = i + 1; j < size; j++) {
+            if (arr[i] == arr[j]) {
+                printf("Repeated character '%c' found at index %d and %d\n", arr[i], i, j);
+            }
+        }
+    }
+}
+
+int main() {
+    char arr[] = {'a', 'b', 'c', 'd', 'a', 'e', 'f', 'c'};
+    int size = sizeof(arr) / sizeof(arr[0]);
+
+    printf("Original array: ");
+    for (int i = 0; i < size; i++) {
+        printf("%c ", arr[i]);
+    }
+    printf("\n");
+
+    printRepeatedCharacters(arr, size);
+
+    return 0;
+}
