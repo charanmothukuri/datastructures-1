@@ -1,0 +1,81 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+    struct Node* prev;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = NULL;
+    return newNode;
+}
+
+// Function to insert a new node at the beginning of the list
+void insertAtBeginning(Node** head, Node** tail, int data) {
+    Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        *tail = newNode;
+    } else {
+        newNode->next = *head;
+        (*head)->prev = newNode;
+        *head = newNode;
+    }
+}
+
+// Function to insert a new node at the end of the list
+void insertAtEnd(Node** head, Node** tail, int data) {
+    Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+        *tail = newNode;
+    } else {
+        newNode->prev = *tail;
+        (*tail)->next = newNode;
+        *tail = newNode;
+    }
+}
+
+// Function to print the linked list in forward direction
+void printForward(Node* head) {
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+// Function to print the linked list in backward direction
+void printBackward(Node* tail) {
+    while (tail != NULL) {
+        printf("%d ", tail->data);
+        tail = tail->prev;
+    }
+    printf("\n");
+}
+
+int main() {
+    Node* head = NULL;
+    Node* tail = NULL;
+
+    insertAtEnd(&head, &tail, 1);
+    insertAtEnd(&head, &tail, 2);
+    insertAtEnd(&head, &tail, 3);
+    insertAtEnd(&head, &tail, 4);
+    insertAtEnd(&head, &tail, 5);
+
+    printf("Linked list in forward direction: ");
+    printForward(head);
+
+    printf("Linked list in backward direction: ");
+    printBackward(tail);
+
+    return 0;
+}
