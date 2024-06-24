@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Queue node structure
+typedef struct QueueNode {
+    int data;
+    struct QueueNode* next;
+} QueueNode;
+
+// Queue structure
+typedef struct Queue {
+    QueueNode* front;
+    QueueNode* rear;
+} Queue;
+
+// Function to create a new queue node
+QueueNode* createQueueNode(int data) {
+    QueueNode* newNode = (QueueNode*)malloc(sizeof(QueueNode));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to enqueue an element into the queue
+void enqueue(Queue* q, int data) {
+    QueueNode* newNode = createQueueNode(data);
+    if (q->rear == NULL) {
+        q->front = q->rear = newNode;
+    } else {
+        q->rear->next = newNode;
+        q->rear = newNode;
+    }
+}
+
+// Function to dequeue an element from the queue
+int dequeue(Queue* q) {
+    if (q->front == NULL) {
+        printf("Queue is empty\n");
+        return -1;
+    }
+
+    int data = q->front->data;
+    QueueNode* temp = q->front;
+    q->front = q->front->next;
+    if (q->front == NULL) {
+        q->rear = NULL;
+    }
+    free(temp);
+    return data;
+}
+
+// Stack structure
+typedef struct Stack {
+    Queue q1;
+    Queue q2;
+} Stack;
+
+// Function to push an element onto the stack
+void push(Stack* s, int data) {
+    enqueue(&s->q1, data);
+}
+
+// Function to pop an element from the stack
+int pop(Stack* s) {
+    if (s->q1.front == NULL) {
+        printf("Stack is empty\n");
+        return -1;
+    }
+
+    while (s->q1.front->next!= NULL) {
+        enqueue(&s->q2, dequeue(&s->q1));
+    }
+
+    int data = dequeue(&s->q1);
+    QueueNode* temp = s->q1.front;
+    s->q1.front = s->q1.rear = NULL;
+    s->q1 = s->q2;
+    s->q2.front = s->q2.rear = NULL;
+    free(temp);
+    return data;
+}
+
+int main() {
+    Stack s;
+    s.q1.front = s.q1.rear = NULL;
+    s.q2.front = s.q2.rear = NULL;
+
+    push(&s, 1);
+    push(&s, 2);
+    push(&s, 3);
+    push(&s, 4);
+    push(&s, 5);
+
+    printf("Popped element: %d\n", pop(&s));
+    printf("Popped element: %d\n", pop(&s));
+    printf("Popped element: %d\n", pop(&s));
+    printf("Popped element: %d\n", pop(&s));
+    printf("Popped element: %d\n", pop(&s));
+
+    return 0;
+}
