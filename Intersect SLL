@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a node at the end of the SLL
+void insertNode(Node** head, int data) {
+    Node* newNode = createNode(data);
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Node* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+// Function to print the SLL
+void printList(Node* head) {
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+// Function to find the intersection of two SLLs
+Node* findIntersection(Node* head1, Node* head2) {
+    Node* current1 = head1;
+    Node* current2 = head2;
+
+    while (current1 != NULL && current2 != NULL) {
+        if (current1 == current2) {
+            return current1;
+        }
+
+        current1 = current1->next;
+        current2 = current2->next;
+    }
+
+    return NULL;
+}
+
+int main() {
+    Node* head1 = NULL;
+    Node* head2 = NULL;
+
+    // Create SLL 1: 1 -> 2 -> 3 -> 4 -> 5
+    insertNode(&head1, 1);
+    insertNode(&head1, 2);
+    insertNode(&head1, 3);
+    insertNode(&head1, 4);
+    insertNode(&head1, 5);
+
+    // Create SLL 2: 6 -> 7 -> 4 -> 5
+    insertNode(&head2, 6);
+    insertNode(&head2, 7);
+    insertNode(&head2, 4);
+    insertNode(&head2, 5);
+
+    printf("SLL 1: ");
+    printList(head1);
+
+    printf("SLL 2: ");
+    printList(head2);
+
+    Node* intersection = findIntersection(head1, head2);
+
+    if (intersection != NULL) {
+        printf("Intersection: %d\n", intersection->data);
+    } else {
+        printf("No intersection\n");
+    }
+
+    return 0;
+}
