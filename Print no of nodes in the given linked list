@@ -1,0 +1,56 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure
+typedef struct Node {
+    int data;
+    struct Node* next;
+} Node;
+
+// Function to create a new node
+Node* createNode(int data) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    newNode->data = data;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to print the number of nodes in the linked list
+int countNodes(Node* head) {
+    int count = 0;
+    Node* current = head;
+    while (current!= NULL) {
+        count++;
+        current = current->next;
+    }
+    return count;
+}
+
+// Function to print the linked list
+void printList(Node* head) {
+    Node* current = head;
+    while (current!= NULL) {
+        printf("%d ", current->data);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    // Create a sample linked list
+    Node* head = createNode(1);
+    head->next = createNode(2);
+    head->next->next = createNode(3);
+    head->next->next->next = createNode(4);
+    head->next->next->next->next = createNode(5);
+
+    // Print the linked list
+    printf("Linked list: ");
+    printList(head);
+
+    // Print the number of nodes in the linked list
+    int numNodes = countNodes(head);
+    printf("Number of nodes: %d\n", numNodes);
+
+    return 0;
+}
